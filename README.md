@@ -3,7 +3,7 @@
 ##### _Make it easy, simple and imagine_
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/imagunet/engage/master/engage.svg" alt="Simple Engage Service" style="max-width: 250px;"/>
+  <img src="https://raw.githubusercontent.com/Imagunet-S-A-S/engage/blob/development/engage.svg)" alt="Simple Engage Service" style="max-width: 250px;"/>
 </p>
 
 ## Overview
