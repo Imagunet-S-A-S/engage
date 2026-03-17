@@ -4,7 +4,7 @@
  * -------------------------------------------------------------------------
  * engage plugin for GLPI is a tool designed to facilitate user assignment 
  * and SLA compliance.
- * Copyright (C) 2022 by the engage Development Team.
+ * Copyright (C) 2024 Imagunet S.A.S. - Juan Gallego, Santiago Gomez, Giovanny Rodriguez
  * -------------------------------------------------------------------------
  * 
  * LICENSE
@@ -25,8 +25,8 @@
  * along with Engage. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  * @package     Engage
- * @author      Miguel Angel Ruiz (miguelangelrtorresco@gmail.com)
- * @copyright   Copyright (C) 2022 by the engage plugin team.
+ * @author      Juan Gallego (juan.gallego@imagunet.com), Santiago Gomez (santiago.gomez@imagunet.com), Giovanny Rodriguez (giovanny.rodriguez@imagunet.com)
+ * @copyright   Copyright (C) 2024 Imagunet S.A.S. - Juan Gallego, Santiago Gomez, Giovanny Rodriguez
  * @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
  * @link        https://github.com/miguelanruiz/engage
  * --------------------------------------------------------------------------

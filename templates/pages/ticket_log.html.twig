@@ -1,0 +1,100 @@
+{#
+ # engage plugin — Ticket activity log tab
+ # Copyright (C) 2024 Imagunet S.A.S.
+ # GLPI-native pattern: no container-fluid, minimal Bootstrap grid.
+ #}
+
+<div class="p-3">
+
+{% if logs|length == 0 %}
+   <div class="alert alert-secondary d-flex align-items-center gap-2">
+      <i class="ti ti-info-circle fs-5 flex-shrink-0"></i>
+      <span>{{ __('Engage has not processed this ticket yet.', 'engage') }}</span>
+   </div>
+{% else %}
+
+   {% for entry in logs %}
+   <div class="card mb-3 border-0 shadow-sm">
+
+      {# Card header: badge + timestamp #}
+      <div class="card-header d-flex align-items-center gap-2 py-2"
+           style="background:var(--tblr-card-cap-bg,#f8f9fa);">
+
+         <span class="badge bg-{{ entry.outcome_class }}">
+            {% if entry.outcome == 'sent' %}<i class="ti ti-circle-check me-1"></i>
+            {% elseif entry.outcome == 'queued' %}<i class="ti ti-clock me-1"></i>
+            {% elseif entry.outcome == 'skipped' %}<i class="ti ti-ban me-1"></i>
+            {% else %}<i class="ti ti-alert-triangle me-1"></i>
+            {% endif %}
+            {{ entry.outcome_label }}
+         </span>
+
+         <span class="text-muted small ms-auto text-nowrap">
+            <i class="ti ti-calendar-event me-1"></i>{{ entry.created_at }}
+         </span>
+      </div>
+
+      {# Card body #}
+      <div class="card-body py-2">
+
+         {# Reason #}
+         <div class="mb-2">
+            <i class="ti ti-message-dots text-muted me-1"></i>
+            {{ entry.reason }}
+         </div>
+
+         {# Tech + Template #}
+         {% if entry.technician_name or entry.template_name %}
+         <div class="text-muted small d-flex flex-wrap gap-3">
+            {% if entry.technician_name %}
+            <span class="text-nowrap">
+               <i class="ti ti-user me-1"></i>
+               <strong>{{ __('Technician', 'engage') }}:</strong> {{ entry.technician_name }}
+            </span>
+            {% endif %}
+            {% if entry.template_name %}
+            <span class="text-nowrap">
+               <i class="ti ti-template me-1"></i>
+               <strong>{{ __('Template', 'engage') }}:</strong> {{ entry.template_name }}
+            </span>
+            {% endif %}
+         </div>
+         {% endif %}
+
+         {# Queue scheduled time + ETA #}
+         {% if entry.outcome == 'queued' and entry.send_after %}
+         <div class="mt-2 py-2 px-3 rounded"
+              style="background:rgba(23,162,184,.08); border-left:3px solid #17a2b8;">
+            <span class="small">
+               <i class="ti ti-hourglass text-info me-1"></i>
+               <strong>{{ __('Scheduled delivery', 'engage') }}:</strong>
+               {{ entry.send_after }}
+            </span>
+            {% if remaining %}
+               <span class="badge bg-info ms-2">
+                  <i class="ti ti-clock me-1"></i>{{ __('In', 'engage') }} {{ remaining }}
+               </span>
+            {% endif %}
+         </div>
+         {% endif %}
+
+      </div>
+   </div>
+   {% endfor %}
+
+   {# Live pending indicator #}
+   {% if queue_row and queue_row.status == 0 %}
+   <div class="alert alert-info d-flex align-items-center gap-3">
+      <div class="spinner-border spinner-border-sm text-info flex-shrink-0" role="status"></div>
+      <div class="small">
+         <strong>{{ __('Pending in queue', 'engage') }}</strong>
+         — {{ __('The followup will be delivered automatically when the scheduled time arrives.', 'engage') }}
+         {% if remaining %}
+            <span class="badge bg-info ms-1">ETA: {{ remaining }}</span>
+         {% endif %}
+      </div>
+   </div>
+   {% endif %}
+
+{% endif %}
+</div>

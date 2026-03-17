@@ -19,13 +19,14 @@
    <issues>https://github.com/miguelanruiz/engage/issues</issues>
    <readme>https://github.com/miguelanruiz/engage/blob/master/README.md</readme>
    <authors>
-      <author>Imagunet</author>
-      <author>Miguel Ruiz</author>
+      <author>Juan Gallego (juan.gallego@imagunet.com)</author>
+      <author>Santiago Gomez (santiago.gomez@imagunet.com)</author>
+      <author>Giovanny Rodriguez (giovanny.rodriguez@imagunet.com)</author>
    </authors>
    <versions>
       <version>
-         <num>1.0.12</num>
-         <compatibility>10.0</compatibility>
+         <num>2.1.0</num>
+         <compatibility>11.0</compatibility>
       </version>
    </versions>
    <langs>

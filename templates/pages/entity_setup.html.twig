@@ -1,44 +1,12 @@
 {#
- # -------------------------------------------------------------------------
- # engage plugin for GLPI is a tool designed to facilitate user assignment 
- # and SLA compliance.
- # Copyright (C) 2022 by the engage Development Team.
- # -------------------------------------------------------------------------
- # 
- # LICENSE
- #
- # This file is part of Engage.
- #
- # Engage is free software; you can redistribute it and/or modify
- # it under the terms of the GNU General Public License as published by
- # the Free Software Foundation; either version 2 of the License, or
- # (at your option) any later version.
- #
- # Engage is distributed in the hope that it will be useful,
- # but WITHOUT ANY WARRANTY; without even the implied warranty of
- # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- # GNU General Public License for more details.
- #
- # You should have received a copy of the GNU General Public License
- # along with Engage. If not, see <http://www.gnu.org/licenses/>.
- # ---------------------------------------------------------------------
- # @package     Engage
- # @author      Miguel Angel Ruiz (miguelangelrtorresco@gmail.com)
- # @copyright   Copyright (C) 2022 by the engage plugin team.
- # @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
- # @link        https://github.com/miguelanruiz/engage
- # --------------------------------------------------------------------------
+ # engage plugin for GLPI
+ # Copyright (C) 2024 Imagunet S.A.S.
+ # GPLv3+
+ # v2.2.1: Recursive moved next to Ticket type. Calendar/slots rendered by PHP.
  #}
 
 {% extends '@engage/base_form.html.twig' %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
-
-
-{% set field_options = {
-    'field_class': 'col-12 col-xxl-6 col-sm-6',
-    'label_class': 'col-xxl-8',
-    'input_class': 'col-xxl-4',
-} %}
 
 {% set field_options = {
     'field_class': 'col-12 col-xxl-6 col-sm-6',
@@ -48,20 +16,18 @@
 {% block config_fields %}
 
 <div class="hr-text">
-    <i class="ti"></i>
-    <span>{{ __('Tech in charge') }}</span>
+    <i class="ti ti-settings"></i>
+    <span>{{ __('Engage — Automatic Engagement') }}</span>
 </div>
 
 <div class="row ps-4">
 
-{{ fields.dropdownYesNo(
-    'is_active',
-    config.fields['is_active'],
-    __('Enable'),
-    {
-        'width': 'auto',
-    }
-) }}
+    {{ fields.dropdownYesNo(
+        'is_active',
+        config.fields['is_active'],
+        __('Enable automatic followup'),
+        { 'width': 'auto' }
+    ) }}
 
 </div>
 
@@ -78,18 +44,14 @@
             __('Request')
         ],
         __('Ticket type'),
-        {
-            'width': 'auto',
-        }
+        { 'width': 'auto' }
     ) }}
 
     {{ fields.checkboxField(
         'is_recursive',
         config.fields['is_recursive'],
         __('Recursive'),
-        {
-            'width': 'auto',
-        }
+        { 'width': 'auto' }
     ) }}
 
 </div>

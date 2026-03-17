@@ -1,0 +1,193 @@
+{#
+ # engage plugin — Admin queue dashboard
+ # Copyright (C) 2024 Imagunet S.A.S.
+ # All text explicitly styled with white-space:normal to override GLPI context CSS.
+ #}
+
+{# ── Header ──────────────────────────────────────────────────────────────── #}
+<div class="px-3 pt-3 pb-2">
+   <table style="width:100%; border:0; border-collapse:collapse;">
+      <tr>
+         <td style="border:0; padding:0; vertical-align:middle;">
+            <h2 class="mb-0" style="font-size:1.1rem; font-weight:700; white-space:nowrap;">
+               <i class="ti ti-list-check me-2 text-primary"></i>
+               {{ __('Engage — Queue Monitor', 'engage') }}
+            </h2>
+         </td>
+         <td style="border:0; padding:0; text-align:right; vertical-align:middle; width:1%;">
+            <a href="{{ path('/plugins/engage/front/settings.php') }}"
+               class="btn btn-sm btn-outline-primary me-1" style="white-space:nowrap;">
+               <i class="ti ti-adjustments-horizontal me-1"></i>{{ __('Settings & Retention', 'engage') }}
+            </a>
+            <a href="{{ path('/plugins/engage/front/queue.php') }}"
+               class="btn btn-sm btn-outline-secondary" style="white-space:nowrap;">
+               <i class="ti ti-refresh me-1"></i>{{ __('Refresh', 'engage') }}
+            </a>
+         </td>
+      </tr>
+   </table>
+</div>
+
+{# ── Stats ────────────────────────────────────────────────────────────────── #}
+<div class="px-3 pb-3">
+
+   <table style="border:0; border-collapse:collapse; margin-bottom:1rem;">
+      <tr>
+         <td style="border:0; padding:0 12px 0 0; vertical-align:top;">
+            <a href="?status={{ STATUS_PENDING }}" class="text-decoration-none">
+               <div class="card border-0 shadow-sm text-center" style="min-width:110px;">
+                  <div class="card-body py-3 px-3">
+                     <div class="h3 fw-bold text-warning mb-1">{{ counts[STATUS_PENDING] ?? 0 }}</div>
+                     <div class="small text-muted" style="white-space:nowrap;">
+                        <i class="ti ti-clock me-1"></i>{{ __('Pending', 'engage') }}
+                     </div>
+                  </div>
+               </div>
+            </a>
+         </td>
+         <td style="border:0; padding:0 12px 0 0; vertical-align:top;">
+            <a href="?status={{ STATUS_SENT }}" class="text-decoration-none">
+               <div class="card border-0 shadow-sm text-center" style="min-width:110px;">
+                  <div class="card-body py-3 px-3">
+                     <div class="h3 fw-bold text-success mb-1">{{ counts[STATUS_SENT] ?? 0 }}</div>
+                     <div class="small text-muted" style="white-space:nowrap;">
+                        <i class="ti ti-circle-check me-1"></i>{{ __('Sent', 'engage') }}
+                     </div>
+                  </div>
+               </div>
+            </a>
+         </td>
+         <td style="border:0; padding:0 12px 0 0; vertical-align:top;">
+            <a href="?status={{ STATUS_ERROR }}" class="text-decoration-none">
+               <div class="card border-0 shadow-sm text-center" style="min-width:110px;">
+                  <div class="card-body py-3 px-3">
+                     <div class="h3 fw-bold text-danger mb-1">{{ counts[STATUS_ERROR] ?? 0 }}</div>
+                     <div class="small text-muted" style="white-space:nowrap;">
+                        <i class="ti ti-alert-triangle me-1"></i>{{ __('Errors', 'engage') }}
+                        {% if (counts[STATUS_ERROR] ?? 0) > 0 %}
+                           <span class="badge bg-danger ms-1">!</span>
+                        {% endif %}
+                     </div>
+                  </div>
+               </div>
+            </a>
+         </td>
+         <td style="border:0; padding:0; vertical-align:top;">
+            <a href="?status={{ STATUS_CANCELLED }}" class="text-decoration-none">
+               <div class="card border-0 shadow-sm text-center" style="min-width:110px;">
+                  <div class="card-body py-3 px-3">
+                     <div class="h3 fw-bold text-secondary mb-1">{{ counts[STATUS_CANCELLED] ?? 0 }}</div>
+                     <div class="small text-muted" style="white-space:nowrap;">
+                        <i class="ti ti-ban me-1"></i>{{ __('Cancelled', 'engage') }}
+                     </div>
+                  </div>
+               </div>
+            </a>
+         </td>
+      </tr>
+   </table>
+
+   {# ── Filter tabs ──────────────────────────────────────────────────────── #}
+   <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+         <a class="nav-link {{ status_filter == -1 ? 'active' : '' }}" href="?status=-1"
+            style="white-space:nowrap;">{{ __('All', 'engage') }}</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link {{ status_filter == STATUS_PENDING ? 'active' : '' }}"
+            href="?status={{ STATUS_PENDING }}" style="white-space:nowrap;">
+            <i class="ti ti-clock me-1 text-warning"></i>{{ __('Pending', 'engage') }}
+            {% if (counts[STATUS_PENDING] ?? 0) > 0 %}
+               <span class="badge bg-warning text-dark ms-1">{{ counts[STATUS_PENDING] }}</span>
+            {% endif %}
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link {{ status_filter == STATUS_SENT ? 'active' : '' }}"
+            href="?status={{ STATUS_SENT }}" style="white-space:nowrap;">
+            <i class="ti ti-circle-check me-1 text-success"></i>{{ __('Sent', 'engage') }}
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link {{ status_filter == STATUS_ERROR ? 'active' : '' }}"
+            href="?status={{ STATUS_ERROR }}" style="white-space:nowrap;">
+            <i class="ti ti-alert-triangle me-1 text-danger"></i>{{ __('Errors', 'engage') }}
+            {% if (counts[STATUS_ERROR] ?? 0) > 0 %}
+               <span class="badge bg-danger ms-1">{{ counts[STATUS_ERROR] }}</span>
+            {% endif %}
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link {{ status_filter == STATUS_CANCELLED ? 'active' : '' }}"
+            href="?status={{ STATUS_CANCELLED }}" style="white-space:nowrap;">
+            <i class="ti ti-ban me-1 text-secondary"></i>{{ __('Cancelled', 'engage') }}
+         </a>
+      </li>
+   </ul>
+
+   {# ── Table ────────────────────────────────────────────────────────────── #}
+   {% if rows|length == 0 %}
+   <div class="alert alert-secondary py-4" style="text-align:center;">
+      <i class="ti ti-inbox" style="font-size:2rem; display:block; margin-bottom:8px; opacity:0.5;"></i>
+      <span style="white-space:normal;">{{ __('No queue entries found for this filter.', 'engage') }}</span>
+   </div>
+   {% else %}
+   <div style="overflow-x:auto;">
+      <table class="table table-hover table-sm" style="table-layout:auto; width:100%;">
+         <thead class="table-light">
+            <tr>
+               <th style="white-space:nowrap; width:40px;">#</th>
+               <th style="white-space:nowrap;">{{ __('Ticket', 'engage') }}</th>
+               <th style="white-space:nowrap;">{{ __('Technician', 'engage') }}</th>
+               <th style="white-space:nowrap;">{{ __('Template', 'engage') }}</th>
+               <th style="white-space:nowrap;">{{ __('Scheduled', 'engage') }}</th>
+               <th style="white-space:nowrap;">{{ __('Processed', 'engage') }}</th>
+               <th style="white-space:nowrap;">{{ __('Status', 'engage') }}</th>
+               <th style="white-space:nowrap;">{{ __('Info', 'engage') }}</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for row in rows %}
+            <tr>
+               <td class="text-muted" style="font-size:0.85rem; white-space:nowrap;">{{ row.id }}</td>
+               <td style="white-space:nowrap;">
+                  <a href="{{ row.ticket_url }}" class="text-decoration-none">
+                     <i class="ti ti-ticket me-1 text-muted"></i>
+                     {{- row.ticket_name|slice(0,45) -}}
+                     {%- if row.ticket_name|length > 45 %}…{% endif %}
+                  </a>
+               </td>
+               <td style="white-space:nowrap; font-size:0.85rem;">{{ row.technician_name }}</td>
+               <td style="white-space:nowrap; font-size:0.85rem; color:#6c757d;">{{ row.template_name }}</td>
+               <td style="white-space:nowrap; font-size:0.85rem;">{{ row.send_after_display }}</td>
+               <td style="white-space:nowrap; font-size:0.85rem; color:#6c757d;">{{ row.processed_at_display ?: '—' }}</td>
+               <td style="white-space:nowrap;">
+                  <span class="badge bg-{{ row.status_class }}">{{ row.status_label }}</span>
+               </td>
+               <td style="white-space:nowrap; font-size:0.85rem;">
+                  {% if row.status == STATUS_PENDING and row.remaining %}
+                     <span style="color:#856404; font-weight:600;">
+                        <i class="ti ti-hourglass me-1"></i>{{ row.remaining }}
+                     </span>
+                  {% elseif row.error_msg %}
+                     <span style="color:#dc3545;" title="{{ row.error_msg }}">
+                        <i class="ti ti-alert-circle me-1"></i>
+                        {{- row.error_msg|slice(0,50) -}}{%- if row.error_msg|length > 50 %}…{% endif %}
+                     </span>
+                  {% else %}
+                     <span style="color:#6c757d;">—</span>
+                  {% endif %}
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+   <p style="font-size:0.8rem; color:#6c757d; text-align:right; white-space:normal; margin-top:4px;">
+      {{ __('Showing', 'engage') }} {{ rows|length }} {{ __('entries', 'engage') }}
+      &nbsp;—&nbsp;
+      {{ __('Refresh page for latest data', 'engage') }}
+   </p>
+   {% endif %}
+
+</div>

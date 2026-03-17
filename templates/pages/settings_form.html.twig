@@ -1,0 +1,192 @@
+{#
+ # engage plugin — Global settings form
+ # Copyright (C) 2024 Imagunet S.A.S.
+ # Uses GLPI native form patterns to avoid layout issues.
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# ── Header ──────────────────────────────────────────────────────────────── #}
+<div class="px-3 pt-3 pb-1">
+   <table style="width:100%; border:0; border-collapse:collapse;">
+      <tr>
+         <td style="border:0; padding:0; vertical-align:middle;">
+            <h2 class="mb-0" style="font-size:1.1rem; font-weight:700; white-space:nowrap;">
+               <i class="ti ti-adjustments-horizontal me-2 text-primary"></i>
+               {{ __('Engage — Global Settings', 'engage') }}
+            </h2>
+         </td>
+         <td style="border:0; padding:0; text-align:right; vertical-align:middle; width:1%;">
+            <a href="{{ path('/plugins/engage/front/queue.php') }}"
+               class="btn btn-sm btn-outline-secondary" style="white-space:nowrap;">
+               <i class="ti ti-list me-1"></i>{{ __('Queue Monitor', 'engage') }}
+            </a>
+         </td>
+      </tr>
+   </table>
+   <p class="text-muted mb-0 mt-1" style="font-size:0.85rem; white-space:normal;">
+      {{ __('These settings apply to all entities.', 'engage') }}
+   </p>
+</div>
+
+{% if canedit %}
+<form method="post" action="{{ path('/plugins/engage/front/settings.php') }}">
+   <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
+{% endif %}
+
+{# ── Section: Data Retention ─────────────────────────────────────────────── #}
+<div class="hr-text">
+   <i class="ti ti-trash"></i>
+   <span>{{ __('Data Retention & Purge', 'engage') }}</span>
+</div>
+
+<div class="row ps-4 pe-3">
+   <div class="alert alert-info col-12 py-2 px-3 mb-3" style="font-size:0.85rem;">
+      <i class="ti ti-info-circle me-1"></i>
+      {{ __('A nightly CronTask automatically deletes old entries per these thresholds. Set 0 to keep forever. PENDING queue entries are never auto-purged.', 'engage') }}
+   </div>
+</div>
+
+{# Log retention #}
+<div class="row ps-4 pe-3">
+   <div class="form-field row col-12 col-sm-6 mb-2">
+      <label class="col-form-label col-xxl-5 text-xxl-end">
+         <i class="ti ti-notes me-1 text-muted"></i>
+         {{ __('Activity log retention', 'engage') }}
+      </label>
+      <div class="col-xxl-7 field-container">
+         {% if canedit %}
+         <div class="input-group" style="max-width:200px;">
+            <input type="number" name="log_retention_days"
+                   min="0" max="3650" step="1"
+                   value="{{ settings.fields['log_retention_days'] }}"
+                   class="form-control" />
+            <span class="input-group-text">{{ __('days', 'engage') }}</span>
+         </div>
+         <span class="form-text">{{ __('0 = forever', 'engage') }} · Default: {{ defaults.log_days }}d</span>
+         {% else %}
+         <span class="badge bg-secondary">
+            {{ settings.fields['log_retention_days'] == 0 ? __('Forever','engage') : settings.fields['log_retention_days'] ~ 'd' }}
+         </span>
+         {% endif %}
+      </div>
+   </div>
+</div>
+
+{# Queue SENT / CANCELLED retention #}
+<div class="row ps-4 pe-3">
+   <div class="form-field row col-12 col-sm-6 mb-2">
+      <label class="col-form-label col-xxl-5 text-xxl-end">
+         <i class="ti ti-circle-check me-1 text-success"></i>
+         {{ __('Queue Sent & Cancelled retention', 'engage') }}
+      </label>
+      <div class="col-xxl-7 field-container">
+         {% if canedit %}
+         <div class="input-group" style="max-width:200px;">
+            <input type="number" name="queue_sent_retention_days"
+                   min="0" max="3650" step="1"
+                   value="{{ settings.fields['queue_sent_retention_days'] }}"
+                   class="form-control" />
+            <span class="input-group-text">{{ __('days', 'engage') }}</span>
+         </div>
+         <span class="form-text">{{ __('0 = forever', 'engage') }} · Default: {{ defaults.sent_days }}d</span>
+         {% else %}
+         <span class="badge bg-secondary">
+            {{ settings.fields['queue_sent_retention_days'] == 0 ? __('Forever','engage') : settings.fields['queue_sent_retention_days'] ~ 'd' }}
+         </span>
+         {% endif %}
+      </div>
+   </div>
+</div>
+
+{# Queue ERROR retention #}
+<div class="row ps-4 pe-3">
+   <div class="form-field row col-12 col-sm-6 mb-2">
+      <label class="col-form-label col-xxl-5 text-xxl-end">
+         <i class="ti ti-alert-triangle me-1 text-danger"></i>
+         {{ __('Queue Error retention', 'engage') }}
+      </label>
+      <div class="col-xxl-7 field-container">
+         {% if canedit %}
+         <div class="input-group" style="max-width:200px;">
+            <input type="number" name="queue_error_retention_days"
+                   min="0" max="3650" step="1"
+                   value="{{ settings.fields['queue_error_retention_days'] }}"
+                   class="form-control" />
+            <span class="input-group-text">{{ __('days', 'engage') }}</span>
+         </div>
+         <span class="form-text">{{ __('0 = forever', 'engage') }} · Default: {{ defaults.error_days }}d · {{ __('Keep higher than sent/cancelled for diagnosis', 'engage') }}</span>
+         {% else %}
+         <span class="badge bg-secondary">
+            {{ settings.fields['queue_error_retention_days'] == 0 ? __('Forever','engage') : settings.fields['queue_error_retention_days'] ~ 'd' }}
+         </span>
+         {% endif %}
+      </div>
+   </div>
+</div>
+
+{# PENDING note #}
+<div class="row ps-4 pe-3 mb-3">
+   <div class="alert alert-warning col-12 col-sm-10 py-2 px-3" style="font-size:0.85rem;">
+      <i class="ti ti-lock me-1"></i>
+      <strong>{{ __('PENDING', 'engage') }}</strong>
+      — {{ __('Queue entries with status PENDING are never deleted automatically. They must be resolved first.', 'engage') }}
+   </div>
+</div>
+
+{# Save button #}
+{% if canedit %}
+<div class="row ps-4 pe-3 mb-4">
+   <div class="col-12">
+      <button type="submit" name="update_settings" value="1" class="btn btn-primary">
+         <i class="ti ti-device-floppy me-1"></i>
+         {{ __('Save settings', 'engage') }}
+      </button>
+   </div>
+</div>
+{% endif %}
+
+{# ── Section: CronTasks ───────────────────────────────────────────────────── #}
+<div class="hr-text">
+   <i class="ti ti-robot"></i>
+   <span>{{ __('Automatic Actions (CronTasks)', 'engage') }}</span>
+</div>
+
+<div class="row ps-4 pe-3 mb-4">
+   <div class="col-12">
+      <table class="table table-sm table-bordered" style="max-width:700px; table-layout:fixed; width:100%;">
+         <colgroup>
+            <col style="width:180px;" />
+            <col />
+            <col style="width:110px;" />
+         </colgroup>
+         <thead class="table-light">
+            <tr>
+               <th>{{ __('Task', 'engage') }}</th>
+               <th>{{ __('Purpose', 'engage') }}</th>
+               <th>{{ __('Frequency', 'engage') }}</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td><code>processQueue</code></td>
+               <td class="small text-muted" style="white-space:normal; word-break:normal;">{{ __('Delivers delayed followups when their scheduled time arrives', 'engage') }}</td>
+               <td class="small">{{ __('Every 1 min', 'engage') }}</td>
+            </tr>
+            <tr>
+               <td><code>purge</code></td>
+               <td class="small text-muted" style="white-space:normal; word-break:normal;">{{ __('Deletes log and queue rows older than the configured thresholds above', 'engage') }}</td>
+               <td class="small">{{ __('Daily', 'engage') }}</td>
+            </tr>
+         </tbody>
+      </table>
+      <a href="{{ path('/front/crontask.php') }}" class="btn btn-sm btn-outline-secondary">
+         <i class="ti ti-external-link me-1"></i>
+         {{ __('Manage in Setup → Automatic Actions', 'engage') }}
+      </a>
+   </div>
+</div>
+
+{% if canedit %}
+</form>
+{% endif %}

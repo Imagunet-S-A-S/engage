@@ -2,58 +2,57 @@
 
 /**
  * -------------------------------------------------------------------------
- * engage plugin for GLPI is a tool designed to facilitate user assignment 
- * and SLA compliance.
- * Copyright (C) 2022 by the engage Development Team.
+ * engage plugin for GLPI
+ * Copyright (C) 2024 Imagunet S.A.S. - Juan Gallego, Santiago Gomez, Giovanny Rodriguez
  * -------------------------------------------------------------------------
- * 
- * LICENSE
- *
- * This file is part of Engage.
- *
- * Engage is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Engage is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Engage. If not, see <http://www.gnu.org/licenses/>.
- * ---------------------------------------------------------------------
- * @package     Engage
- * @author      Miguel Angel Ruiz (miguelangelrtorresco@gmail.com)
- * @copyright   Copyright (C) 2022 by the engage plugin team.
- * @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
- * @link        https://github.com/miguelanruiz/engage
+ * LICENSE: GPLv3+
+ * @link https://github.com/imagunet/engage
  * --------------------------------------------------------------------------
+ *
+ * v2.2.0: Removed round-robin member sync. Added dynamic time slots save.
  */
 
-include ("../../../inc/includes.php");
+include('../../../inc/includes.php');
 
 $plugin = new Plugin();
-
 if (!$plugin->isInstalled('engage') || !$plugin->isActivated('engage')) {
    Html::displayNotFoundError();
 }
 
 $config = new PluginEngageConfig();
 
-if (isset($_POST['add'])) {
-    $config->add($_POST);
-    Html::back();
-}
+if (isset($_POST['add']) || isset($_POST['update'])) {
 
-if (isset($_POST['update'])) {
-    $config->update($_POST);
-    Html::back();
+   // Normalize priority_filter: empty string if no priorities selected
+   if (!isset($_POST['priority_filter']) || $_POST['priority_filter'] === '') {
+      $_POST['priority_filter'] = '';
+   }
+
+   // Normalize use_default_outside_slots checkbox (unchecked = not present in POST)
+   $_POST['use_default_outside_slots'] = isset($_POST['use_default_outside_slots']) ? 1 : 0;
+   $_POST['override_calendar']         = isset($_POST['override_calendar']) ? 1 : 0;
+
+   // Strip slot arrays before passing to CommonDBTM (not DB columns)
+   $slot_post = [];
+   foreach (['engage_slot_ids', 'engage_slot_names', 'engage_slot_starts', 'engage_slot_ends', 'engage_slot_templates'] as $key) {
+      $slot_post[$key] = (array)($_POST[$key] ?? []);
+      unset($_POST[$key]);
+   }
+
+   if (isset($_POST['add'])) {
+      $config_id = $config->add($_POST);
+   } else {
+      $config->update($_POST);
+      $config_id = (int)$_POST['id'];
+   }
+
+   // Save dynamic time slots
+   if ($config_id > 0) {
+      PluginEngageTimeSlot::saveFromPost($config_id, $slot_post);
+   }
+
+   Html::back();
 }
 
 $id = Session::getActiveEntity();
-
-Html::redirect($CFG_GLPI["root_doc"]."/front/entity.form.php?forcetab=PluginEngageConfig\$1&id=".$id);
-
-//Html::footer();
+Html::redirect($CFG_GLPI['root_doc'] . '/front/entity.form.php?forcetab=PluginEngageConfig$1&id=' . $id);
