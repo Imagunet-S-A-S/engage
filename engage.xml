@@ -2,7 +2,7 @@
    <name>Simple Engage Service</name>
    <key>engage</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/miguelanruiz/engage/master/engage.svg</logo>
+   <logo>https://raw.githubusercontent.com/Imagunet-S-A-S/engage/development/engage.svg</logo>
    <description>
       <short>
          <en>Simple Engage GLPI plugin.</en>
@@ -15,17 +15,15 @@
       </long>
    </description>
    <homepage>https://imagunet.com/</homepage>
-   <download>https://github.com/miguelanruiz/engage/releases</download>
-   <issues>https://github.com/miguelanruiz/engage/issues</issues>
-   <readme>https://github.com/miguelanruiz/engage/blob/master/README.md</readme>
+   <download>https://github.com/Imagunet-S-A-S/engage/releases</download>
+   <issues>https://github.com/Imagunet-S-A-S/engage/issues</issues>
+   <readme>https://github.com/Imagunet-S-A-S/engage/blob/development/README.md</readme>
    <authors>
-      <author>Juan Gallego (juan.gallego@imagunet.com)</author>
-      <author>Santiago Gomez (santiago.gomez@imagunet.com)</author>
-      <author>Giovanny Rodriguez (giovanny.rodriguez@imagunet.com)</author>
+      <author>Imagunet S.A.S.</author>
    </authors>
    <versions>
       <version>
-         <num>2.1.0</num>
+         <num>2.2.0</num>
          <compatibility>11.0</compatibility>
       </version>
    </versions>

@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - **Queue system** (`PluginEngageQueue`): asynchronous followup delivery with cron processor, status tracking (pending/sent/error) and queue dashboard UI
-- **Time slot support** (`PluginEngageTimeslot`): schedule-based template selection with UTC/Bogotá timezone handling, slot range resolution and next-slot calculation
+- **Time slot support** (`PluginEngageTimeSlot`): schedule-based template selection with UTC/timezone handling, slot range resolution and next-slot calculation
 - **Settings module** (`PluginEngageSettings`): global plugin settings with log retention policy and cron purge task
 - **Ticket log** (`PluginEngageLog`): per-ticket traceability tab showing engagement outcomes and status labels
 - `front/queue.php` — queue dashboard front controller
@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **Round-robin technician assignment** now supports per-entity rotation (`PluginEngageTicket`)
+- Technician assignment now uses the configured fallback technician with rights validation; round-robin assignment was removed
 - **Config class** (`PluginEngageConfig`) extended with calendar/delay scheduling, priority filtering, inline slot editor and Bootstrap 5 rendering
 - `hook.php` updated with new hooks for queue processing and cron registration
 - `front/config.form.php` and `front/config.php` updated for GLPI 11 routing
@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 - Support for GLPI 10.0.x
+- Round-robin technician assignment and related tables/fields
 - Legacy inline PHP rendering replaced by Twig templates throughout
 
 ---

@@ -37,4 +37,4 @@ jobs:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
           asset_path: ${{ steps.build-package.outputs.package-path }}
           asset_name: ${{ steps.build-package.outputs.package-basename }}
-          asset_content_type: " application/x-bzip2"
+          asset_content_type: "application/x-bzip2"

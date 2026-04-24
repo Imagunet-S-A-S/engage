@@ -4,7 +4,7 @@
  * -------------------------------------------------------------------------
  * engage plugin for GLPI is a tool designed to facilitate user assignment 
  * and SLA compliance.
- * Copyright (C) 2024 Imagunet S.A.S. - Juan Gallego, Santiago Gomez, Giovanny Rodriguez
+ * Copyright (C) 2024 Imagunet S.A.S.
  * -------------------------------------------------------------------------
  * 
  * LICENSE
@@ -25,19 +25,15 @@
  * along with Engage. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  * @package     Engage
- * @author      Juan Gallego (juan.gallego@imagunet.com), Santiago Gomez (santiago.gomez@imagunet.com), Giovanny Rodriguez (giovanny.rodriguez@imagunet.com)
- * @copyright   Copyright (C) 2024 Imagunet S.A.S. - Juan Gallego, Santiago Gomez, Giovanny Rodriguez
+ * @author      Imagunet S.A.S.
+ * @copyright   Copyright (C) 2024 Imagunet S.A.S.
  * @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
- * @link        https://github.com/miguelanruiz/engage
+ * @link        https://github.com/Imagunet-S-A-S/engage
  * --------------------------------------------------------------------------
  */
 
 include ('../../../inc/includes.php');
 
-Html::header(PluginEngageConfig::getTypeName(),
-             $_SERVER['PHP_SELF'],
-             "admin",
-             "pluginengageconfig",
-             "config");
+Session::checkRight('config', READ);
 
-Html::footer();
+Html::redirect($CFG_GLPI['root_doc'] . '/plugins/engage/front/settings.php');
