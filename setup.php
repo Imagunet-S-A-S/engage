@@ -15,6 +15,7 @@ use Glpi\Plugin\Hooks;
 define('PLUGIN_ENGAGE_VERSION',          '2.2.0');
 define('PLUGIN_ENGAGE_MIN_GLPI_VERSION', '11.0.0');
 define('PLUGIN_ENGAGE_MAX_GLPI_VERSION', '11.0.99');
+define('PLUGIN_ENGAGE_MIN_PHP_VERSION',  '8.2.0');
 
 function plugin_init_engage()
 {
@@ -53,11 +54,35 @@ function plugin_version_engage()
                 'min' => PLUGIN_ENGAGE_MIN_GLPI_VERSION,
                 'max' => PLUGIN_ENGAGE_MAX_GLPI_VERSION,
                 'dev' => false,
-            ]
+            ],
+            'php' => [
+                'min' => PLUGIN_ENGAGE_MIN_PHP_VERSION,
+            ],
         ]
     ];
 }
 
-function plugin_engage_check_prerequisites() { return true; }
+function plugin_engage_check_prerequisites()
+{
+    if (version_compare(PHP_VERSION, PLUGIN_ENGAGE_MIN_PHP_VERSION, 'lt')) {
+        Plugin::messageIncompatible('php', PLUGIN_ENGAGE_MIN_PHP_VERSION);
+        return false;
+    }
+
+    if (
+        version_compare(GLPI_VERSION, PLUGIN_ENGAGE_MIN_GLPI_VERSION, 'lt')
+        || version_compare(GLPI_VERSION, PLUGIN_ENGAGE_MAX_GLPI_VERSION, 'gt')
+    ) {
+        Plugin::messageIncompatible(
+            'core',
+            PLUGIN_ENGAGE_MIN_GLPI_VERSION,
+            PLUGIN_ENGAGE_MAX_GLPI_VERSION
+        );
+        return false;
+    }
+
+    return true;
+}
+
 function plugin_engage_check_config($verbose = false) { return true; }
-function plugin_engage_options() { return ['autoinstall_disabled' => true]; }
+function plugin_engage_options() { return [Plugin::OPTION_AUTOINSTALL_DISABLED => true]; }

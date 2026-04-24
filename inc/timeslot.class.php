@@ -206,7 +206,9 @@ class PluginEngageTimeSlot extends CommonDBTM
    public static function nextSlotStart(PluginEngageConfig $config): ?string
    {
       $configs_id   = (int)($config->fields['id'] ?? 0);
-      $calendars_id = (int)($config->fields['calendars_id'] ?? 0);
+      $calendars_id = !empty($config->fields['override_calendar'])
+         ? 0
+         : (int)($config->fields['calendars_id'] ?? 0);
       $slots        = self::getSlotsForConfig($configs_id);
 
       if (empty($slots)) return null;
@@ -269,6 +271,37 @@ class PluginEngageTimeSlot extends CommonDBTM
       Toolbox::logWarning('[Engage TimeSlot] nextSlotStart: could not find working hour in 14 days for calendar #' . $calendars_id);
       $candidate->setTimezone(new DateTimeZone('UTC'));
       return $candidate->format('Y-m-d H:i:s');
+   }
+
+   /**
+    * Return the next working minute for a calendar, in UTC for queue storage.
+    */
+   public static function nextCalendarWorkingDate(int $calendars_id): ?string
+   {
+      if ($calendars_id <= 0) return null;
+
+      $calendar = new Calendar();
+      if (!$calendar->getFromDB($calendars_id)) return null;
+
+      $candidate = new DateTime('now', new DateTimeZone('UTC'));
+      $candidate->modify('+1 minute');
+      $candidate->setTime(
+         (int)$candidate->format('H'),
+         (int)$candidate->format('i'),
+         0
+      );
+
+      $max_attempts = 14 * 24 * 60;
+      for ($i = 0; $i < $max_attempts; $i++) {
+         $datetime = $candidate->format('Y-m-d H:i:s');
+         if ($calendar->isAWorkingHour($datetime)) {
+            return $datetime;
+         }
+         $candidate->modify('+1 minute');
+      }
+
+      Toolbox::logWarning('[Engage TimeSlot] nextCalendarWorkingDate: could not find working hour in 14 days for calendar #' . $calendars_id);
+      return null;
    }
 
    // ── Range helpers ─────────────────────────────────────────────────────

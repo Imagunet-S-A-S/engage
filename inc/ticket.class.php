@@ -144,28 +144,37 @@ class PluginEngageTicket extends CommonDBTM
          }
       }
 
+      // ── Resolve technician ─────────────────────────────────────────────
+      if ($technician === 0) {
+         PluginEngageLog::record($ticket_id, $entities_id,
+            PluginEngageLog::OUTCOME_SKIPPED,
+            __('No technician configured', 'engage'));
+         return;
+      }
+      if (!self::hasRequiredRights($technician, $entities_id)) {
+         PluginEngageLog::record($ticket_id, $entities_id,
+            PluginEngageLog::OUTCOME_SKIPPED,
+            sprintf(__('Technician #%d lacks ASSIGN/STEAL rights in this entity', 'engage'), $technician),
+            $technician);
+         return;
+      }
+
       // ── Calendar check ─────────────────────────────────────────────────
       $override_cal = !empty($config->fields['override_calendar']);
       if (!$override_cal && $calendars_id > 0 && !PluginEngageConfig::isWithinCalendar($config)) {
          // Outside business hours — enqueue for next working period
          $next_working = PluginEngageTimeSlot::nextSlotStart($config);
          if ($next_working === null) {
-            // No slots configured — use delay offset from next calendar open time
-            // For now, log as skipped with helpful message
-            $cal      = new Calendar();
-            $cal_name = $cal->getFromDB($calendars_id) ? $cal->fields['name'] : '#' . $calendars_id;
-            PluginEngageLog::record($ticket_id, $entities_id,
-               PluginEngageLog::OUTCOME_SKIPPED,
-               sprintf(__('Outside business hours (calendar: %s) and no time slots configured to determine next window', 'engage'), $cal_name));
-            return;
+            $next_working = PluginEngageTimeSlot::nextCalendarWorkingDate($calendars_id);
          }
          $fallback_tpl = (int)($config->fields['itil_followup'] ?? 0);
-         if ($fallback_tpl === 0) {
+         if ($next_working === null || $fallback_tpl === 0) {
             $cal      = new Calendar();
             $cal_name = $cal->getFromDB($calendars_id) ? $cal->fields['name'] : '#' . $calendars_id;
             PluginEngageLog::record($ticket_id, $entities_id,
                PluginEngageLog::OUTCOME_SKIPPED,
-               sprintf(__('Outside business hours (calendar: %s) and no default template configured', 'engage'), $cal_name));
+               sprintf(__('Outside business hours (calendar: %s) and no next delivery window or default template configured', 'engage'), $cal_name),
+               $technician, $fallback_tpl);
             return;
          }
          $queue_id = PluginEngageQueue::enqueue(
@@ -179,21 +188,6 @@ class PluginEngageTicket extends CommonDBTM
             PluginEngageLog::OUTCOME_QUEUED,
             sprintf(__('Outside business hours (calendar: %s) — queued for: %s', 'engage'), $cal_name, $send_at),
             $technician, $fallback_tpl, (int)$queue_id, $send_at);
-         return;
-      }
-
-      // ── Resolve technician ─────────────────────────────────────────────
-      if ($technician === 0) {
-         PluginEngageLog::record($ticket_id, $entities_id,
-            PluginEngageLog::OUTCOME_SKIPPED,
-            __('No technician configured', 'engage'));
-         return;
-      }
-      if (!self::hasRequiredRights($technician, $entities_id)) {
-         PluginEngageLog::record($ticket_id, $entities_id,
-            PluginEngageLog::OUTCOME_SKIPPED,
-            sprintf(__('Technician #%d lacks ASSIGN/STEAL rights in this entity', 'engage'), $technician),
-            $technician);
          return;
       }
 

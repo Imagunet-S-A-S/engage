@@ -96,22 +96,33 @@ class PluginEngageConfig extends CommonDBTM
 
    public static function getConfigForEntity($value = '') {
       $dbu = new DbUtils();
+      $requested_entity = is_array($value) ? null : (int)$value;
       $ancestors = [];
       if (is_array($value)) {
-         $ancestors = $dbu->getAncestorsOf("glpi_entities", $value);
-         $ancestors = array_diff($ancestors, $value);
+         $entities = array_map('intval', $value);
+         $ancestors = $dbu->getAncestorsOf("glpi_entities", $entities);
+         $ancestors = array_diff($ancestors, $entities);
       } elseif (strlen((string)$value) == 0) {
+         $entities = [];
          $ancestors = $_SESSION['glpiparententities'] ?? [];
       } else {
+         $entities = [(int)$value];
          $ancestors = $dbu->getAncestorsOf('glpi_entities', $value);
       }
-      array_push($ancestors, $value);
+      $ancestors = array_merge($ancestors, $entities);
       $ancestors = array_reverse($ancestors);
 
       $config = new self();
       foreach ($ancestors as $entity_id) {
+         $entity_id = (int)$entity_id;
          $found = $config->getFromDBByCrit(['entities_id' => $entity_id]);
          if (!$found) { $config->getEmpty(); continue; }
+         if ($requested_entity !== null
+               && $entity_id !== $requested_entity
+               && empty($config->fields['is_recursive'])) {
+            $config->getEmpty();
+            continue;
+         }
          if ($config->fields['users_id_tech'] == self::CONFIG_PARENT
                && $config->fields['is_active'] != self::DISABLED) {
             continue;
@@ -241,7 +252,7 @@ class PluginEngageConfig extends CommonDBTM
          echo "<div class='form-field row col-12 d-flex align-items-center mb-2'>";
          echo "<label class='col-form-label col-xxl-4 text-xxl-end'>".__('Engage', 'engage')."</label>";
          echo "<div class='col-xxl-8 field-container'>";
-         echo "<span class='entity-badge'><span class='text-nowrap'>".$whoare."</span></span>";
+         echo "<span class='entity-badge'><span class='text-nowrap'>".htmlspecialchars($whoare)."</span></span>";
          echo "</div></div>";
       }
    }
@@ -325,7 +336,7 @@ class PluginEngageConfig extends CommonDBTM
          echo "<input class='form-check-input engage-priority-cb' type='checkbox'"
             . " name='priority_filter_values[]' value='{$value}'"
             . $is_checked . $dis . " id='prio_{$value}'>";
-         echo "<label class='form-check-label {$color_class}' for='prio_{$value}'>{$label}</label>";
+         echo "<label class='form-check-label {$color_class}' for='prio_{$value}'>" . htmlspecialchars($label) . "</label>";
          echo "</div>";
       }
       echo "</div>";

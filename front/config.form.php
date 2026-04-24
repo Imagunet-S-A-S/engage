@@ -19,9 +19,12 @@ if (!$plugin->isInstalled('engage') || !$plugin->isActivated('engage')) {
    Html::displayNotFoundError();
 }
 
+Session::checkRight('config', UPDATE);
+
 $config = new PluginEngageConfig();
 
 if (isset($_POST['add']) || isset($_POST['update'])) {
+   Session::checkCSRF($_POST);
 
    // Normalize priority_filter: empty string if no priorities selected
    if (!isset($_POST['priority_filter']) || $_POST['priority_filter'] === '') {
