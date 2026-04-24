@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] - 2026-04-24
+
+### Fixed
+
+- Enforce GLPI 11 and PHP 8.2 requirements in plugin metadata and prerequisite checks.
+- Add CSRF and permission validation to the entity configuration form handler.
+- Respect the entity recursive flag when resolving inherited Engage configuration.
+- Validate the configured technician before queueing delayed followups.
+- Queue outside-calendar followups to the next available working window when no time slot is configured.
+- Make next-slot scheduling honor the calendar override option.
+- Escape direct HTML output in technician and priority labels.
+- Redirect the legacy `front/config.php` entry point to the supported settings page.
+- Ignore Codex workspace files in Git.
+
+### Changed
+
+- Standardized plugin authorship and repository metadata under Imagunet S.A.S.
+- Updated package metadata, marketplace XML, release workflow MIME type, and lint workflow PHP version.
+- Updated README and changelog to reflect the current non-round-robin behavior.
+
 ## [2.2.0] - 2026-03-03
 
 ### Breaking Changes
