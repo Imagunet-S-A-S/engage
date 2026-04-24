@@ -3,10 +3,10 @@
 /**
  * -------------------------------------------------------------------------
  * engage plugin for GLPI
- * Copyright (C) 2024 Imagunet S.A.S. - Juan Gallego, Santiago Gomez, Giovanny Rodriguez
+ * Copyright (C) 2024 Imagunet S.A.S.
  * -------------------------------------------------------------------------
  * LICENSE: GPLv3+
- * @link https://github.com/imagunet/engage
+ * @link https://github.com/Imagunet-S-A-S/engage/
  * --------------------------------------------------------------------------
  */
 
@@ -46,9 +46,9 @@ function plugin_version_engage()
         'name'         => 'Simple Engage Service',
         'shortname'    => 'engage',
         'version'      => PLUGIN_ENGAGE_VERSION,
-        'author'       => '<a href="https://www.imagunet.com">Imagunet - Juan Gallego, Santiago Gomez, Giovanny Rodriguez</a>',
+        'author'       => '<a href="https://www.imagunet.com">Imagunet S.A.S.</a>',
         'license'      => 'GPLv3+',
-        'homepage'     => 'https://github.com/imagunet/engage/',
+        'homepage'     => 'https://github.com/Imagunet-S-A-S/engage/',
         'requirements' => [
             'glpi' => [
                 'min' => PLUGIN_ENGAGE_MIN_GLPI_VERSION,

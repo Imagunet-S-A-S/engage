@@ -3,10 +3,10 @@
 /**
  * -------------------------------------------------------------------------
  * engage plugin for GLPI
- * Copyright (C) 2024 Imagunet S.A.S. - Juan Gallego, Santiago Gomez, Giovanny Rodriguez
+ * Copyright (C) 2024 Imagunet S.A.S.
  * -------------------------------------------------------------------------
  * LICENSE: GPLv3+
- * @link https://github.com/imagunet/engage
+ * @link https://github.com/Imagunet-S-A-S/engage/
  * --------------------------------------------------------------------------
  *
  * PluginEngageLog — Activity log for every ticket Engage processed.
