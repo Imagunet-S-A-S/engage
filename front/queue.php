@@ -11,7 +11,7 @@ use Glpi\Application\View\TemplateRenderer;
 
 include('../../../inc/includes.php');
 
-Session::checkRight('config', READ);
+Session::checkRight(PluginEngageConfig::$rightname, READ);
 
 Html::header(
    __('Engage — Queue & Activity', 'engage'),

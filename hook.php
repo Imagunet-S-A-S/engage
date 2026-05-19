@@ -131,6 +131,8 @@ function plugin_engage_install()
 
    $migration->executeMigration();
 
+   PluginEngageProfile::ensureDefaultRights();
+
    // Migrate old fixed slots to dynamic table
    _plugin_engage_migrate_legacy_slots($DB, $config_table, $slots_table);
 
@@ -216,6 +218,8 @@ function plugin_engage_uninstall()
          $DB->doQuery("DROP TABLE `{$table}`");
       }
    }
+
+   $DB->delete('glpi_profilerights', ['name' => PluginEngageProfile::RIGHT_CONFIG]);
 
    CronTask::unregister('PluginEngageQueue');
    CronTask::unregister('PluginEngageSettings');

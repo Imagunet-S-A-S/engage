@@ -29,7 +29,7 @@
  */
 class PluginEngageTimeSlot extends CommonDBTM
 {
-   static $rightname = 'config';
+   static $rightname = PluginEngageProfile::RIGHT_CONFIG;
 
    public static function getTypeName($nb = 0): string { return __('Time Slot', 'engage'); }
 

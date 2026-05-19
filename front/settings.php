@@ -9,11 +9,11 @@ use Glpi\Application\View\TemplateRenderer;
 
 include('../../../inc/includes.php');
 
-Session::checkRight('config', READ);
+Session::checkRight(PluginEngageConfig::$rightname, READ);
 
 // Handle form save
 if (isset($_POST['update_settings'])) {
-   Session::checkRight('config', UPDATE);
+   Session::checkRight(PluginEngageConfig::$rightname, UPDATE);
    Session::checkCSRF($_POST);
    PluginEngageSettings::handlePost($_POST);
    Html::back();

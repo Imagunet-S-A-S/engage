@@ -34,6 +34,6 @@
 
 include ('../../../inc/includes.php');
 
-Session::checkRight('config', READ);
+Session::checkRight(PluginEngageConfig::$rightname, READ);
 
 Html::redirect($CFG_GLPI['root_doc'] . '/plugins/engage/front/settings.php');

@@ -24,7 +24,7 @@ use Glpi\Application\View\TemplateRenderer;
 
 class PluginEngageSettings extends CommonDBTM {
 
-   static $rightname = 'config';
+   static $rightname = PluginEngageProfile::RIGHT_CONFIG;
 
    // Defaults (days)
    const DEFAULT_LOG_RETENTION            = 90;

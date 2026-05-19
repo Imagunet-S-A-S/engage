@@ -12,7 +12,7 @@
 
 class PluginEngageQueue extends CommonDBTM {
 
-   static $rightname = 'config';
+   static $rightname = PluginEngageProfile::RIGHT_CONFIG;
 
    const STATUS_PENDING   = 0;
    const STATUS_SENT      = 1;

@@ -19,7 +19,7 @@ if (!$plugin->isInstalled('engage') || !$plugin->isActivated('engage')) {
    Html::displayNotFoundError();
 }
 
-Session::checkRight('config', UPDATE);
+Session::checkRight(PluginEngageConfig::$rightname, UPDATE);
 
 $config = new PluginEngageConfig();
 

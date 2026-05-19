@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] - 2026-05-19
+
+### Fixed
+
+- Make the Engage profile right (`plugin_engage_config`) the actual permission used by entity configuration, settings, and queue pages.
+- Rename the profile permission row from "Technician" to "Engage configuration" to match what it controls.
+- Seed Engage read/update rights for profiles that already have GLPI setup/config update rights, keeping super-admin/configuration profiles functional after upgrades.
+
 ## [2.2.1] - 2026-04-24
 
 ### Fixed

@@ -28,7 +28,7 @@ class PluginEngageConfig extends CommonDBTM
 {
    static private $_instance           = NULL;
    static private $_instance_entity_id = NULL;
-   static $rightname                   = 'config';
+   static $rightname                   = PluginEngageProfile::RIGHT_CONFIG;
 
    const CONFIG_PARENT = 0;
    const ENABLED       = 1;
@@ -43,8 +43,8 @@ class PluginEngageConfig extends CommonDBTM
    const PRIORITY_HIGH      = 4;
    const PRIORITY_VERY_HIGH = 5;
 
-   public static function canCreate(): bool { return Session::haveRight('config', UPDATE); }
-   public static function canView(): bool   { return Session::haveRight('config', READ); }
+   public static function canCreate(): bool { return Session::haveRight(self::$rightname, UPDATE); }
+   public static function canView(): bool   { return Session::haveRight(self::$rightname, READ); }
    public static function getTypeName($nb = 0): string { return __('Setup'); }
    public function getName($with_comment = 0): string  { return __('Engage', 'engage'); }
 
