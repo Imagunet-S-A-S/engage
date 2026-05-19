@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.6] - 2026-05-19
+
+### Fixed
+
+- Remove redundant `Session::checkCSRF()` calls from `front/config.form.php` and `front/settings.php`. In GLPI 11, the Symfony `CheckCsrfListener` validates and **consumes** the one-time CSRF token before the front controller runs; calling `checkCSRF()` a second time always failed with HTTP 403 ("The action you have requested is not allowed"), preventing any save from the Engage entity tab or settings page.
+
 ## [2.2.5] - 2026-05-19
 
 ### Fixed

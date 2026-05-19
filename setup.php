@@ -12,7 +12,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_ENGAGE_VERSION',          '2.2.5');
+define('PLUGIN_ENGAGE_VERSION',          '2.2.6');
 define('PLUGIN_ENGAGE_MIN_GLPI_VERSION', '11.0.0');
 define('PLUGIN_ENGAGE_MAX_GLPI_VERSION', '11.0.99');
 define('PLUGIN_ENGAGE_MIN_PHP_VERSION',  '8.2.0');
