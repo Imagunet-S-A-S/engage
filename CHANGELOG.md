@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.4] - 2026-05-19
+
+### Changed
+
+- Publish GitHub releases with `softprops/action-gh-release@v2` and attach the generated package as a release asset.
+
 ## [2.2.3] - 2026-05-19
 
 ### Fixed
