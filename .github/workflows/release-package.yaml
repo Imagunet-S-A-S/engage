@@ -28,6 +28,13 @@ jobs:
         uses: "actions/checkout@v4"
         with:
           ref: ${{ steps.release-vars.outputs.tag_name }}
+      - name: "Extract changelog for this version"
+        id: "changelog"
+        run: |
+          # Pull the block between the first two "## [" headings from CHANGELOG.md
+          body=$(awk '/^## \[/{if(found){exit} found=1; next} found{print}' CHANGELOG.md)
+          # Write to a temp file to avoid shell quoting issues with multiline strings
+          echo "$body" > /tmp/release-body.md
       - name: "Build package"
         id: "build-package"
         uses: "glpi-project/tools/github-actions/build-package@0.6.2"
@@ -38,6 +45,7 @@ jobs:
         with:
           tag_name: ${{ steps.release-vars.outputs.tag_name }}
           name: ${{ steps.release-vars.outputs.tag_name }}
+          body_path: /tmp/release-body.md
           draft: false
           files: ${{ steps.build-package.outputs.package-path }}
           fail_on_unmatched_files: true
