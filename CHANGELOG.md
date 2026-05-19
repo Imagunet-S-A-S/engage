@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.3] - 2026-05-19
+
+### Fixed
+
+- Fix Engage front controllers when the plugin is installed in `/var/lib/glpi/plugins` instead of under the GLPI source tree.
+- Allow profiles with GLPI setup/config rights to access Engage even if their active session does not yet include the new Engage-specific right.
+
 ## [2.2.2] - 2026-05-19
 
 ### Fixed

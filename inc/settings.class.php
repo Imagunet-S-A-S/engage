@@ -144,7 +144,7 @@ class PluginEngageSettings extends CommonDBTM {
 
    public static function showSettingsForm(): void {
       $settings = self::getInstance();
-      $canedit  = Session::haveRight(self::$rightname, UPDATE);
+      $canedit  = PluginEngageProfile::canUpdateEngage();
 
       TemplateRenderer::getInstance()->display('@engage/pages/settings_form.html.twig', [
          'settings' => $settings,
@@ -161,7 +161,7 @@ class PluginEngageSettings extends CommonDBTM {
     * Handle POST from settings form.
     */
    public static function handlePost(array $post): void {
-      if (!Session::haveRight(self::$rightname, UPDATE)) {
+      if (!PluginEngageProfile::canUpdateEngage()) {
          return;
       }
 

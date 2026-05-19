@@ -32,8 +32,12 @@
  * --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+if (!defined('GLPI_ROOT')) {
+   require_once '/usr/share/glpi/inc/includes.php';
+}
 
-Session::checkRight(PluginEngageConfig::$rightname, READ);
+if (!PluginEngageProfile::canReadEngage()) {
+   Html::displayRightError();
+}
 
 Html::redirect($CFG_GLPI['root_doc'] . '/plugins/engage/front/settings.php');

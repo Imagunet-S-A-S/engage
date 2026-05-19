@@ -85,6 +85,16 @@ class PluginEngageProfile extends Profile {
       ]);
    }
 
+   public static function canReadEngage(): bool {
+      return Session::haveRight(self::RIGHT_CONFIG, READ)
+         || Session::haveRight('config', READ);
+   }
+
+   public static function canUpdateEngage(): bool {
+      return Session::haveRight(self::RIGHT_CONFIG, UPDATE)
+         || Session::haveRight('config', UPDATE);
+   }
+
    /**
     * Seed Engage rights for profiles that already have GLPI setup/config update rights.
     * This keeps existing super-admin/configuration profiles working after upgrades.

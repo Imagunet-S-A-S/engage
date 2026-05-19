@@ -43,8 +43,8 @@ class PluginEngageConfig extends CommonDBTM
    const PRIORITY_HIGH      = 4;
    const PRIORITY_VERY_HIGH = 5;
 
-   public static function canCreate(): bool { return Session::haveRight(self::$rightname, UPDATE); }
-   public static function canView(): bool   { return Session::haveRight(self::$rightname, READ); }
+   public static function canCreate(): bool { return PluginEngageProfile::canUpdateEngage(); }
+   public static function canView(): bool   { return PluginEngageProfile::canReadEngage(); }
    public static function getTypeName($nb = 0): string { return __('Setup'); }
    public function getName($with_comment = 0): string  { return __('Engage', 'engage'); }
 
@@ -261,7 +261,7 @@ class PluginEngageConfig extends CommonDBTM
 
    static function showConfigForm(Entity $entity) {
       $config  = self::getInstance($entity->getEntityID());
-      $canedit = Session::haveRight(self::$rightname, UPDATE);
+      $canedit = PluginEngageProfile::canUpdateEngage();
 
       TemplateRenderer::getInstance()->display('@engage/pages/entity_setup.html.twig', [
          'canedit' => $canedit,

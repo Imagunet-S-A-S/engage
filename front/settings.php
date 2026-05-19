@@ -7,13 +7,19 @@ use Glpi\Application\View\TemplateRenderer;
  * Copyright (C) 2024 Imagunet S.A.S.
  */
 
-include('../../../inc/includes.php');
+if (!defined('GLPI_ROOT')) {
+   require_once '/usr/share/glpi/inc/includes.php';
+}
 
-Session::checkRight(PluginEngageConfig::$rightname, READ);
+if (!PluginEngageProfile::canReadEngage()) {
+   Html::displayRightError();
+}
 
 // Handle form save
 if (isset($_POST['update_settings'])) {
-   Session::checkRight(PluginEngageConfig::$rightname, UPDATE);
+   if (!PluginEngageProfile::canUpdateEngage()) {
+      Html::displayRightError();
+   }
    Session::checkCSRF($_POST);
    PluginEngageSettings::handlePost($_POST);
    Html::back();

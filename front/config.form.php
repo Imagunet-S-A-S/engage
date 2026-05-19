@@ -12,14 +12,18 @@
  * v2.2.0: Removed round-robin member sync. Added dynamic time slots save.
  */
 
-include('../../../inc/includes.php');
+if (!defined('GLPI_ROOT')) {
+   require_once '/usr/share/glpi/inc/includes.php';
+}
 
 $plugin = new Plugin();
 if (!$plugin->isInstalled('engage') || !$plugin->isActivated('engage')) {
    Html::displayNotFoundError();
 }
 
-Session::checkRight(PluginEngageConfig::$rightname, UPDATE);
+if (!PluginEngageProfile::canUpdateEngage()) {
+   Html::displayRightError();
+}
 
 $config = new PluginEngageConfig();
 
