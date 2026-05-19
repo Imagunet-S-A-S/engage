@@ -23,6 +23,10 @@ class PluginEngageQueue extends CommonDBTM {
       return __('Engage Queue', 'engage');
    }
 
+   public static function canCreate(): bool { return true; }
+   public static function canUpdate(): bool { return true; }
+   public static function canView(): bool   { return PluginEngageProfile::canReadEngage(); }
+
    public static function enqueue(
       int $tickets_id, int $entities_id,
       int $technician_id, int $template_id,

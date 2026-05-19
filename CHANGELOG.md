@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.5] - 2026-05-19
+
+### Fixed
+
+- Override `canUpdate()`, `canCreateItem()`, `canUpdateItem()`, and `canViewItem()` in `PluginEngageConfig`, `PluginEngageSettings`, and `PluginEngageQueue` so that GLPI's internal `CommonDBTM` permission checks honour the same logic as the explicit controller guards — resolves "no permission" errors when saving entity configuration.
+- Add a DB fallback (`activeProfileHasRight`) to `canReadEngage()` and `canUpdateEngage()` so profiles whose session rights have not been refreshed after plugin install still pass the permission check.
+- Fix the Engage entity tab visibility check to use `canReadEngage()` instead of the raw `Session::haveRight()` call.
+
+### Added
+
+- PHPUnit test suite (`tests/Unit/`) covering time-slot range logic, priority-filter parsing, and profile rights constants; runs without a GLPI installation via stubs in `tests/bootstrap.php`.
+- `phpunit.xml` configuration and `composer test` script.
+
+### Changed
+
+- Updated `composer.json`: description, `phpunit/phpunit ^10.5` dev dependency, `vendor/` added to `.gitignore`.
+- Standardised file headers to the short form across `inc/profile.class.php`, `front/config.php`, and the Twig base templates.
+- Rewrote `README.md` with badges, permissions section, configuration table, and development instructions.
+
 ## [2.2.4] - 2026-05-19
 
 ### Changed

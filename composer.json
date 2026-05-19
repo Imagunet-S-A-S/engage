@@ -1,13 +1,14 @@
 {
     "name": "imagunet/engage",
-    "description": "Simple Engage Service plugin for GLPI",
+    "description": "Automatic followup and technician assignment plugin for GLPI",
     "type": "glpi-plugin",
     "license": "GPL-3.0-or-later",
     "require": {
         "php": ">=8.2"
     },
     "require-dev": {
-        "glpi-project/tools": "^0.4"
+        "glpi-project/tools": "^0.4",
+        "phpunit/phpunit": "^10.5"
     },
     "config": {
         "optimize-autoloader": true,
@@ -15,5 +16,9 @@
             "php": "8.2.0"
         },
         "sort-packages": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "lint": "php -l inc/*.php front/*.php"
     }
 }

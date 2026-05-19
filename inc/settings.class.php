@@ -38,6 +38,10 @@ class PluginEngageSettings extends CommonDBTM {
       return __('Engage Global Settings', 'engage');
    }
 
+   public static function canCreate(): bool { return PluginEngageProfile::canUpdateEngage(); }
+   public static function canUpdate(): bool { return PluginEngageProfile::canUpdateEngage(); }
+   public static function canView(): bool   { return PluginEngageProfile::canReadEngage(); }
+
    // ── Singleton ─────────────────────────────────────────────────────────
 
    /**

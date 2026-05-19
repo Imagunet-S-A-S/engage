@@ -44,7 +44,11 @@ class PluginEngageConfig extends CommonDBTM
    const PRIORITY_VERY_HIGH = 5;
 
    public static function canCreate(): bool { return PluginEngageProfile::canUpdateEngage(); }
+   public static function canUpdate(): bool { return PluginEngageProfile::canUpdateEngage(); }
    public static function canView(): bool   { return PluginEngageProfile::canReadEngage(); }
+   public function canCreateItem(): bool    { return PluginEngageProfile::canUpdateEngage(); }
+   public function canUpdateItem(): bool    { return PluginEngageProfile::canUpdateEngage(); }
+   public function canViewItem(): bool      { return PluginEngageProfile::canReadEngage(); }
    public static function getTypeName($nb = 0): string { return __('Setup'); }
    public function getName($with_comment = 0): string  { return __('Engage', 'engage'); }
 
@@ -52,7 +56,7 @@ class PluginEngageConfig extends CommonDBTM
       if ($item->getType() !== 'Entity') return '';
       // Hide from Self-Service interface and users without config READ right
       if (Session::getCurrentInterface() === 'helpdesk') return '';
-      if (!Session::haveRight(self::$rightname, READ)) return '';
+      if (!PluginEngageProfile::canReadEngage()) return '';
       return self::getName();
    }
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool {

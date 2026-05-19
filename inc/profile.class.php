@@ -2,33 +2,11 @@
 
 /**
  * -------------------------------------------------------------------------
- * engage plugin for GLPI is a tool designed to facilitate user assignment 
- * and SLA compliance.
+ * engage plugin for GLPI
  * Copyright (C) 2024 Imagunet S.A.S.
  * -------------------------------------------------------------------------
- * 
- * LICENSE
- *
- * This file is part of Engage.
- *
- * Engage is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Engage is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Engage. If not, see <http://www.gnu.org/licenses/>.
- * ---------------------------------------------------------------------
- * @package     Engage
- * @author      Imagunet S.A.S.
- * @copyright   Copyright (C) 2024 Imagunet S.A.S.
- * @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
- * @link        https://github.com/Imagunet-S-A-S/engage
+ * LICENSE: GPLv3+
+ * @link https://github.com/Imagunet-S-A-S/engage/
  * --------------------------------------------------------------------------
  */
 
@@ -85,14 +63,43 @@ class PluginEngageProfile extends Profile {
       ]);
    }
 
+   private static function activeProfileHasRight(string $rightname, int $right): bool {
+      global $DB;
+
+      $profiles_id = (int)($_SESSION['glpiactiveprofile']['id'] ?? 0);
+      if ($profiles_id <= 0) {
+         return false;
+      }
+
+      $iterator = $DB->request([
+         'SELECT' => ['rights'],
+         'FROM'   => 'glpi_profilerights',
+         'WHERE'  => [
+            'profiles_id' => $profiles_id,
+            'name'        => $rightname,
+         ],
+         'LIMIT'  => 1,
+      ]);
+
+      foreach ($iterator as $row) {
+         return (((int)$row['rights'] & $right) === $right);
+      }
+
+      return false;
+   }
+
    public static function canReadEngage(): bool {
       return Session::haveRight(self::RIGHT_CONFIG, READ)
-         || Session::haveRight('config', READ);
+         || Session::haveRight('config', READ)
+         || self::activeProfileHasRight(self::RIGHT_CONFIG, READ)
+         || self::activeProfileHasRight('config', READ);
    }
 
    public static function canUpdateEngage(): bool {
       return Session::haveRight(self::RIGHT_CONFIG, UPDATE)
-         || Session::haveRight('config', UPDATE);
+         || Session::haveRight('config', UPDATE)
+         || self::activeProfileHasRight(self::RIGHT_CONFIG, UPDATE)
+         || self::activeProfileHasRight('config', UPDATE);
    }
 
    /**
