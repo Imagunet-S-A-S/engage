@@ -28,7 +28,8 @@ if (!PluginEngageProfile::canUpdateEngage()) {
 $config = new PluginEngageConfig();
 
 if (isset($_POST['add']) || isset($_POST['update'])) {
-   Session::checkCSRF($_POST);
+   // CSRF already validated by GLPI 11's CheckCsrfListener (one-time token);
+   // calling Session::checkCSRF() again would consume the used token and fail.
 
    // Normalize priority_filter: empty string if no priorities selected
    if (!isset($_POST['priority_filter']) || $_POST['priority_filter'] === '') {

@@ -20,7 +20,7 @@ if (isset($_POST['update_settings'])) {
    if (!PluginEngageProfile::canUpdateEngage()) {
       Html::displayRightError();
    }
-   Session::checkCSRF($_POST);
+   // CSRF already validated by GLPI 11's CheckCsrfListener before reaching here.
    PluginEngageSettings::handlePost($_POST);
    Html::back();
 }
